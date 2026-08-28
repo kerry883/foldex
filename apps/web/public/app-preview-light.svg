@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 800" width="1500" height="800" role="img" aria-label="foldex app preview placeholder">
+  <rect width="1500" height="800" fill="#ffffff"/>
+  <rect x="0" y="0" width="1500" height="56" fill="#f5f5f5"/>
+  <circle cx="36" cy="28" r="7" fill="#d4d4d4"/>
+  <circle cx="60" cy="28" r="7" fill="#d4d4d4"/>
+  <circle cx="84" cy="28" r="7" fill="#d4d4d4"/>
+  <rect x="620" y="16" width="260" height="24" rx="12" fill="#eaeaea"/>
+
+  <rect x="0" y="56" width="300" height="744" fill="#fafafa"/>
+  <rect x="28" y="96" width="150" height="14" rx="7" fill="#d4d4d4"/>
+  <rect x="28" y="140" width="220" height="12" rx="6" fill="#ececec"/>
+  <rect x="28" y="172" width="180" height="12" rx="6" fill="#ececec"/>
+  <rect x="44" y="204" width="150" height="12" rx="6" fill="#ececec"/>
+  <rect x="44" y="236" width="170" height="12" rx="6" fill="#ececec"/>
+  <rect x="28" y="268" width="200" height="12" rx="6" fill="#ececec"/>
+  <rect x="28" y="320" width="120" height="12" rx="6" fill="#d4d4d4"/>
+  <rect x="28" y="352" width="210" height="12" rx="6" fill="#ececec"/>
+  <rect x="28" y="384" width="160" height="12" rx="6" fill="#ececec"/>
+
+  <rect x="360" y="112" width="420" height="28" rx="8" fill="#d4d4d4"/>
+  <rect x="360" y="172" width="740" height="12" rx="6" fill="#efefef"/>
+  <rect x="360" y="200" width="820" height="12" rx="6" fill="#efefef"/>
+  <rect x="360" y="228" width="700" height="12" rx="6" fill="#efefef"/>
+
+  <rect x="360" y="284" width="820" height="180" rx="16" fill="#fbfbfb" stroke="#e5e5e5"/>
+  <rect x="392" y="316" width="120" height="12" rx="6" fill="#84cc16"/>
+  <rect x="392" y="348" width="620" height="10" rx="5" fill="#ececec"/>
+  <rect x="392" y="374" width="560" height="10" rx="5" fill="#ececec"/>
+  <rect x="392" y="400" width="600" height="10" rx="5" fill="#ececec"/>
+
+  <rect x="360" y="500" width="820" height="12" rx="6" fill="#efefef"/>
+  <rect x="360" y="528" width="760" height="12" rx="6" fill="#efefef"/>
+  <rect x="360" y="556" width="640" height="12" rx="6" fill="#efefef"/>
+
+  <rect x="1220" y="112" width="240" height="600" rx="16" fill="#fafafa" stroke="#e5e5e5"/>
+  <rect x="1248" y="144" width="120" height="12" rx="6" fill="#d4d4d4"/>
+  <rect x="1248" y="184" width="184" height="10" rx="5" fill="#efefef"/>
+  <rect x="1248" y="210" width="150" height="10" rx="5" fill="#efefef"/>
+  <rect x="1248" y="256" width="184" height="64" rx="12" fill="#f2f2f2"/>
+  <rect x="1248" y="340" width="184" height="10" rx="5" fill="#efefef"/>
+  <rect x="1248" y="366" width="140" height="10" rx="5" fill="#efefef"/>
+
+  <text x="750" y="760" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" fill="#a3a3a3">app screenshot placeholder</text>
+</svg>
