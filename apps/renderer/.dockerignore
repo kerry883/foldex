@@ -1,0 +1,6 @@
+pycache
+output/
+.git
+.env
+venv/
+"manim-video-gen-480123-06fea24b1b85.json"
