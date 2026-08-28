@@ -28,6 +28,10 @@ export const queryKeys = {
     keys: ["settings", "keys"] as const,
     userSettings: ["settings", "userSettings"] as const,
   },
+  updates: {
+    version: ["updates", "version"] as const,
+    releases: ["updates", "releases"] as const,
+  },
   videos:{
     all:["videos"] as const,
     mine:()=>["videos","mine"] as const,
