@@ -20,6 +20,7 @@ import { NavMain } from "./nav-main"
 import { NavContent } from "./nav-content"
 import { Dialog, DialogContent, DialogTrigger } from "@workspace/ui/components/dialog"
 import SettingsComponent from "../settingscomponents/settings-component"
+import { useSettingsStore } from "@/stores/settingsstore"
 import { Suspense } from "react"
 
 // This is sample data
@@ -50,7 +51,8 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { setOpen } = useSidebar()
-  const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
+  const isSettingsOpen = useSettingsStore((state) => state.isOpen);
+  const setIsSettingsOpen = useSettingsStore((state) => state.setOpen);
 
   return (
     <Sidebar

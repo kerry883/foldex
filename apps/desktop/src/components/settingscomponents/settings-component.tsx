@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import { SidebarTrigger, useSidebar } from "@workspace/ui/components/sidebar";
-import { Settings, Key, MessageSquare, Eye, EyeOff, Check, X, Loader2, Trash2, RotateCcw, GlobeIcon, User, Palette, Menu, LogIn } from "lucide-react";
+import { Settings, Key, MessageSquare, Eye, EyeOff, Check, X, Loader2, Trash2, RotateCcw, GlobeIcon, User, Palette, Menu, LogIn, Download, RefreshCw, ExternalLink, AlertTriangle } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
+import { Progress } from "@workspace/ui/components/progress";
+import { Badge } from "@workspace/ui/components/badge";
 import { Separator } from "@workspace/ui/components/separator";
 import { cn } from "@workspace/ui/lib/utils";
 import { toast } from "sonner";
 import { PROVIDERS, TAVILY_PROVIDER } from "@/lib/providers";
 import { useApiKeys, useSaveApiKey, useDeleteApiKey, useValidateApiKey, useUserSettings, useUpdateUserSettings } from "@/hooks/use-settings";
+import { useAppVersion, useReleaseHistory, useUpdater, openReleasePage, formatUpdateDate } from "@/hooks/use-updater";
+import { useSettingsStore } from "@/stores/settingsstore";
 import type { ApiKeyInfo } from "@/lib/api-types";
 import { authClient, useSession } from "@/lib/auth-client";
 import { useTheme } from "next-themes";
@@ -585,15 +589,198 @@ function SystemPromptSection() {
   );
 }
 
+// ─── Updates Section ───
+function UpdatesSection() {
+  const { data: currentVersion } = useAppVersion();
+  const { phase, update, progress, error, checkForUpdate, installUpdate, restart } = useUpdater();
+  const [showHistory, setShowHistory] = useState(false);
+  const { data: releases, isLoading: releasesLoading, isError: releasesError } = useReleaseHistory(showHistory);
+
+  const isBusy = phase === "checking" || phase === "downloading";
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-medium">Updates</h3>
+        <p className="text-sm text-muted-foreground">
+          Keep foldex current. In-app updates always install the newest release.
+        </p>
+      </div>
+      <Separator />
+
+      <div className="rounded-xl border border-border/60 bg-card p-4 space-y-4">
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-1">
+            <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <Download className="h-4 w-4" /> Installed version
+            </h4>
+            <p className="text-xs text-muted-foreground">
+              {currentVersion ? `foldex ${currentVersion}` : "Reading version…"}
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={checkForUpdate}
+            disabled={isBusy}
+            className="gap-2 cursor-pointer shrink-0"
+          >
+            {phase === "checking" ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <RefreshCw className="h-3.5 w-3.5" />
+            )}
+            Check for updates
+          </Button>
+        </div>
+
+        {phase === "idle" && (
+          <p className="text-xs text-muted-foreground">
+            Check to see whether a newer version is available.
+          </p>
+        )}
+
+        {phase === "up-to-date" && (
+          <p className="flex items-center gap-1.5 text-xs text-green-500">
+            <Check className="h-3.5 w-3.5" /> You are on the latest version.
+          </p>
+        )}
+
+        {phase === "error" && (
+          <p className="flex items-start gap-1.5 text-xs text-destructive">
+            <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-px" />
+            <span>{error || "Could not check for updates."}</span>
+          </p>
+        )}
+
+        {update && phase !== "up-to-date" && (
+          <div className="rounded-lg border border-border/50 bg-muted/40 p-3 space-y-3">
+            <div className="flex items-center gap-2">
+              <Badge>Version {update.version}</Badge>
+              {formatUpdateDate(update.date) && (
+                <span className="text-xs text-muted-foreground">
+                  {formatUpdateDate(update.date)}
+                </span>
+              )}
+            </div>
+
+            {update.notes && (
+              <p className="max-h-40 overflow-y-auto whitespace-pre-wrap text-xs text-muted-foreground">
+                {update.notes}
+              </p>
+            )}
+
+            {phase === "downloading" && (
+              <div className="space-y-1.5">
+                <Progress value={progress} className="h-2" />
+                <p className="text-xs text-muted-foreground">Downloading… {progress}%</p>
+              </div>
+            )}
+
+            {phase === "available" && (
+              <Button size="sm" onClick={installUpdate} className="gap-2 cursor-pointer">
+                <Download className="h-3.5 w-3.5" /> Download and install
+              </Button>
+            )}
+
+            {phase === "installed" && (
+              <div className="space-y-2">
+                <p className="flex items-center gap-1.5 text-xs text-green-500">
+                  <Check className="h-3.5 w-3.5" /> Update installed.
+                </p>
+                <Button size="sm" onClick={restart} className="gap-2 cursor-pointer">
+                  <RotateCcw className="h-3.5 w-3.5" /> Restart now
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="rounded-xl border border-border/60 bg-card p-4 space-y-3">
+        <div className="flex items-center justify-between gap-4">
+          <div className="space-y-1">
+            <h4 className="text-sm font-semibold text-foreground">Other versions</h4>
+            <p className="text-xs text-muted-foreground">
+              Older releases must be downloaded and installed manually.
+            </p>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowHistory(!showHistory)}
+            className="cursor-pointer shrink-0"
+          >
+            {showHistory ? "Hide" : "Show"}
+          </Button>
+        </div>
+
+        {showHistory && (
+          <div className="space-y-2 pt-1">
+            {releasesLoading && (
+              <div className="flex justify-center py-4">
+                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              </div>
+            )}
+
+            {releasesError && (
+              <p className="text-xs text-destructive">Could not load releases from GitHub.</p>
+            )}
+
+            {releases?.length === 0 && (
+              <p className="text-xs text-muted-foreground">No releases published yet.</p>
+            )}
+
+            {releases?.map((release, index) => (
+              <div
+                key={release.tag}
+                className="flex items-center justify-between gap-3 rounded-lg bg-muted/40 px-3 py-2"
+              >
+                <div className="min-w-0 space-y-0.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium truncate">{release.name}</span>
+                    {index === 0 && <Badge variant="secondary">Latest</Badge>}
+                    {release.prerelease && <Badge variant="outline">Pre-release</Badge>}
+                  </div>
+                  {release.publishedAt && (
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(release.publishedAt).toLocaleDateString()}
+                    </p>
+                  )}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => openReleasePage(release.url)}
+                  className="h-7 gap-1.5 px-2 text-xs cursor-pointer shrink-0"
+                >
+                  <ExternalLink className="h-3 w-3" /> Open
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <p className="text-xs text-muted-foreground">
+        On Linux, in-app updates apply to the AppImage build only. If you installed the .deb or .rpm
+        package, download the new version from the release page instead.
+      </p>
+    </div>
+  );
+}
+
 // ─── Main Settings Component ───
 export default function SettingsComponent() {
-  const [activeTab, setActiveTab] = useState<"account" | "apikeys" | "preferences" | "prompt">("account");
-  
+  const activeTab = useSettingsStore((state) => state.tab);
+  const setActiveTab = useSettingsStore((state) => state.setTab);
+
   const navItems = [
     { id: "account", label: "Account", icon: User },
     { id: "apikeys", label: "API Keys", icon: Key },
     { id: "preferences", label: "Appearance", icon: Palette },
     { id: "prompt", label: "System Prompt", icon: MessageSquare },
+    { id: "updates", label: "Updates", icon: Download },
   ] as const;
 
   return (
@@ -661,6 +848,7 @@ export default function SettingsComponent() {
             {activeTab === "apikeys" && <ApiKeysSection />}
             {activeTab === "preferences" && <PreferencesSection />}
             {activeTab === "prompt" && <SystemPromptSection />}
+            {activeTab === "updates" && <UpdatesSection />}
           </div>
         </main>
       </div>

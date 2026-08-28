@@ -16,6 +16,9 @@
     "fs:allow-write-file",
     "fs:allow-write-text-file",
     "notification:default",
-    "http:default"
+    "http:default",
+    "updater:default",
+    "process:allow-restart",
+    "opener:allow-open-url"
   ]
 }
