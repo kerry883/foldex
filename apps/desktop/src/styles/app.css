@@ -1,0 +1,6 @@
+@import "@workspace/ui/globals.css";
+
+/* Third-party styles that ship their own utility classes. Paths are relative to
+   this file, and bun installs these into the app's own node_modules. */
+@source "../../node_modules/@blocknote/shadcn";
+@source "../../node_modules/streamdown/dist/*.js";
