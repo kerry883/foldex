@@ -82,7 +82,6 @@ services:
     plan: standard
     dockerfilePath: ./apps/renderer/Dockerfile
     dockerContext: ./apps/renderer
-    healthCheckPath: /health
     envVars:
       - key: PORT
         value: "10000"
