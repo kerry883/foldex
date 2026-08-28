@@ -1,0 +1,109 @@
+# yaml-language-server: $schema=https://render.com/schema/render.yaml.json
+# Foldex Render Blueprint — landing, API, BullMQ worker, Manim renderer,
+# Postgres, and Redis (Key Value). Do not use Free instances: spin-down kills queues.
+#
+# After first deploy, set these API secrets in the dashboard:
+#   FRONTEND_URL      https://<foldex-web>.onrender.com  (or https://foldex.space)
+#   BETTER_AUTH_URL   https://<foldex-api>.onrender.com
+#   RESEND_API_KEY
+#   COOKIE_DOMAIN     leave empty on *.onrender.com; set .foldex.space with a custom domain
+# Renderer secrets: R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET_NAME, R2_PUBLIC_URL
+services:
+  - type: web
+    name: foldex-web
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./apps/web/Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: HOST
+        value: "0.0.0.0"
+      - key: NODE_ENV
+        value: production
+
+  - type: web
+    name: foldex-api
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./apps/backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: foldex-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: foldex-kv
+          type: keyvalue
+          property: connectionString
+      - key: MANIM_FLASK_URL
+        value: http://foldex-renderer:10000
+      - key: FRONTEND_URL
+        sync: false
+      - key: BETTER_AUTH_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: BETTER_AUTH_SECRET
+        generateValue: true
+      - key: COOKIE_DOMAIN
+        sync: false
+
+  - type: worker
+    name: foldex-worker
+    runtime: docker
+    plan: starter
+    dockerfilePath: ./apps/backend/Dockerfile
+    dockerContext: .
+    dockerCommand: bun run worker
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: foldex-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: foldex-kv
+          type: keyvalue
+          property: connectionString
+      - key: MANIM_FLASK_URL
+        value: http://foldex-renderer:10000
+
+  - type: pserv
+    name: foldex-renderer
+    runtime: docker
+    plan: standard
+    dockerfilePath: ./apps/renderer/Dockerfile
+    dockerContext: ./apps/renderer
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET_NAME
+        sync: false
+      - key: R2_PUBLIC_URL
+        sync: false
+
+  - type: keyvalue
+    name: foldex-kv
+    plan: starter
+    ipAllowList: []
+    maxmemoryPolicy: noeviction
+
+databases:
+  - name: foldex-db
+    plan: basic-1gb
+    postgresMajorVersion: 16

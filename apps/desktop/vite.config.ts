@@ -6,6 +6,12 @@ import tailwindcss from "@tailwindcss/vite"
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
+  optimizeDeps: {
+    exclude: ["backend"],
+  },
+  ssr: {
+    external: ["backend"],
+  },
   plugins: [
     devtools(),
     tailwindcss(),

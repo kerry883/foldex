@@ -16,10 +16,10 @@ import { Button } from "@workspace/ui/components/button";
 import { toast } from "sonner";
 
 interface VideoPlayerProps {
-  src: string;
-  poster?: string;
+  src?: string | null
+  poster?: string | null
   className?: string;
-  title?: string;
+  title?: string | null;
   transcript?: string; // Add transcript prop
 }
 
@@ -152,6 +152,7 @@ export function VideoPlayer({
   };
 
  const handleDownload = async () => {
+    if (!src) return;
     try {
       toast.loading("Downloading video...", { id: "dl-toast" });
 
@@ -250,8 +251,8 @@ export function VideoPlayer({
         {/* 1. The Video Element */}
         <video
           ref={videoRef}
-          src={src}
-          poster={poster}
+          src={src ?? undefined}
+          poster={poster ?? undefined}
           className="w-full h-full object-contain"
           onTimeUpdate={handleTimeUpdate}
           onLoadedMetadata={handleLoadedMetadata}

@@ -1,0 +1,13 @@
+node_modules
+**/node_modules
+.git
+.turbo
+.output
+dist
+**/.env
+**/.env.*
+!**/.env.example
+reference
+apps/desktop/src-tauri/target
+**/*.md
+.DS_Store

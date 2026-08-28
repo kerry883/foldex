@@ -10,9 +10,13 @@ COPY packages/ui/package.json ./packages/ui/
 
 RUN bun install --frozen-lockfile
 
-COPY apps/backend ./apps/backend
+COPY packages/ui ./packages/ui
+COPY apps/web ./apps/web
 
-WORKDIR /app/apps/backend
+RUN bun run --filter=web build
+
+WORKDIR /app/apps/web
 ENV HOST=0.0.0.0
+ENV NODE_ENV=production
 EXPOSE 3000
-CMD ["bun", "run", "src/index.ts"]
+CMD ["bun", "run", "start"]
