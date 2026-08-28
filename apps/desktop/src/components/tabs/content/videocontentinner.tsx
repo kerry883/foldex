@@ -421,7 +421,7 @@ const VideoContentInner = ({ videoId, folderId }: VideoContentInnerProps) => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={()=>{navigator.clipboard.writeText(video.code);setCopied(true);setTimeout(()=>setCopied(false),3000)}}
+                        onClick={()=>{navigator.clipboard.writeText(video.code ?? "");setCopied(true);setTimeout(()=>setCopied(false),3000)}}
                         className="gap-2 cursor-pointer"
                       >
                         {copied ? (

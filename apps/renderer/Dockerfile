@@ -27,5 +27,7 @@ RUN mkdir -p output && chmod 777 output
 # Expose the port defined in flask_api.py
 EXPOSE 5001
 
-# --timeout 0 tells Gunicorn "Let Cloud Run handle the timeout"
+ENV PORT=5001
+
+# Render sets PORT; --timeout 0 lets long Manim jobs finish.
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 flask_api:app

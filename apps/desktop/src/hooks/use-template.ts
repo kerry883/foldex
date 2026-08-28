@@ -1,4 +1,3 @@
-import { templateapi } from "@/lib/api"
 import type { CreateTemplateBody, Note, Template } from "@/lib/api-types"
 import * as localTemplates from "@/lib/services/localtemplates"
 import { queryKeys } from "@/lib/query-keys"
@@ -15,7 +14,10 @@ export const useMyTemplates = () =>{
 export const useCommunityTemplates = () =>{
     return useQuery({
         queryKey:queryKeys.templates.community(),
-        queryFn: async () => templateapi.community()
+        queryFn: async () =>
+            ((await localTemplates.getmytemplates()) as unknown as Template[]).filter(
+                (template) => template.ispublic,
+            ),
     })
 }
 

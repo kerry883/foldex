@@ -1,16 +1,6 @@
 # Foldex — Backend
 
-> Personalized Self-Learning Management Platform — API server.
-
-![Hono](https://img.shields.io/badge/Hono-4-orange?logo=hono)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)
-![License](https://img.shields.io/badge/license-MIT-green)
-
-REST API and AI streaming backend for foldex. Built with Hono, Drizzle ORM, and PostgreSQL. Handles authentication, note/folder/template/video CRUD and AI chat streaming with tool calls .
-
-**Frontend repo → [foldex-frontend](https://github.com/Pirate193/foldex-frontend)**
-**ManimRenderer repo->[foldex-manim-renderer](https://github.com/Pirate193/foldex-manim-renderer.git)**
+REST API for foldex. Built with Hono, Drizzle ORM, and PostgreSQL. Desktop is local-first; this server handles Better Auth and video generation only. Types are consumed by the desktop app via Hono RPC (`hono/client`).
 
 ---
 
@@ -22,10 +12,10 @@ REST API and AI streaming backend for foldex. Built with Hono, Drizzle ORM, and 
 | ORM | Drizzle ORM |
 | Database | PostgreSQL 16 |
 | Auth | Better Auth (OTP / passwordless) |
-| AI | Vercel AI SDK (OpenAI, Anthropic, Google, DeepSeek, xAI, Moonshot) |
+| Queue | BullMQ + Redis (Render Key Value, `noeviction`) |
 | Email | Resend |
-| Video Renderer | Python, Flask, Manim (Runs as a separate microservice) see manim-renderer repo |
-| Deployment | Dokploy (Docker) |
+| Video Renderer | Python, Flask, Manim (private service) |
+| Deployment | Render Blueprint at repo-root `render.yaml` |
 
 ---
 
@@ -33,41 +23,19 @@ REST API and AI streaming backend for foldex. Built with Hono, Drizzle ORM, and 
 
 | Prefix | Description |
 |---|---|
-| `POST /api/auth/*` | Better Auth — OTP send, verify, sign out |
-| `GET /api/notes` | List notes (supports `?folderId=`, `?search=`) |
-| `POST /api/notes` | Create note |
-| `GET /api/notes/:id` | Get full note with content |
-| `PUT /api/notes/:id` | Update note |
-| `DELETE /api/notes/:id` | Delete note |
-| `POST /api/notes/:id/move` | Move note to folder |
-| `GET /api/folders` | Get folders |
-| `GET /api/folders/:id` | Get folder|
-| `POST /api/folders` | Create folder |
-| `PUT /api/folders/:id` | Update folder |
-| `DELETE /api/folders/:id` | Delete folder |
-| `GET /api/templates` | All templates (own + public) |
-| `GET /api/templates/my` | Own templates only |
-| `GET /api/templates/community` | Public templates |
-| `POST /api/templates/from-note/:noteId` | Save note as template |
-| `POST /api/templates/:id/apply` | Create note from template |
-| `GET /api/chat` | List chats |
-| `POST /api/chat` | Create chat |
-| `GET /api/chat/:id` | Get chat messages |
-| `PUT /api/chat/:id` | Rename chat |
-| `DELETE /api/chat/:id` | Delete chat |
-| `POST /api/chat/:id/messages` | Add message |
-| `POST /api/ai/chat/:chatId` | Stream AI response (SSE) |
-| `GET /api/videos` | Get public videos|
-| `GET /api/videos/my`|Get Users videos|
-| `POST /api/videos/generate`| Generate  video used by desktop|
-| `POST /api/videos/generate-from-prompt`|Generate  video from prompt used by web |
-| `POST /api/videos/:id/retry`|Retry  failed video|
-| `PUT /api/videos/:id`| Update  video|
-| `DELETE /api/videos/:id`| Delete video|
-| `POST /api/videos/:id/feedback`|submit feedback|
-| `GET /api/videos/:id/feedback`|Get feedback|
-| `GET /api/videos/:id/getstatus`| used to poll for status when generating video|
-| `GET /api/videos/:id`|Get video|
+| `GET /` | Health check |
+| `POST,GET /api/auth/*` | Better Auth — OTP send, verify, session, sign out |
+| `GET /api/videos` | Public ready videos |
+| `GET /api/videos/my` | Authenticated user's videos (`?folderId=`) |
+| `POST /api/videos/generate` | Queue a render (desktop supplies Manim code) |
+| `POST /api/videos/:id/retry` | Retry a failed video with fixed code |
+| `PUT /api/videos/:id` | Update folder / public flag |
+| `DELETE /api/videos/:id` | Delete or unpublish video |
+| `POST /api/videos/:id/feedback` | Submit like/dislike |
+| `GET /api/videos/:id/feedback` | Get current user's vote |
+| `GET /api/videos/:id/getstatus` | Poll generation status |
+| `GET /api/videos/:id` | Get video |
+
 ---
 
 ## Getting Started
@@ -75,28 +43,22 @@ REST API and AI streaming backend for foldex. Built with Hono, Drizzle ORM, and 
 ### Prerequisites
 
 - [Bun](https://bun.sh) >= 1.0
-- [Docker](https://www.docker.com) — for local PostgreSQL
+- [Docker](https://www.docker.com) — for local PostgreSQL and Redis
 - A [Resend](https://resend.com) account for OTP emails
 
-### 1. Clone and install
+### 1. Install from the monorepo root
 
 ```bash
-git clone https://github.com/Pirate193/foldex-backend.git
-cd foldex-backend
 bun install
 ```
 
-### 2. Start PostgreSQL and Redid
+### 2. Start PostgreSQL and Redis
 
 ```bash
 docker compose up -d
 ```
 
-```bash
-docker run -d --name foldex-redis -p 6379:6379 redis:alpine
-```
-
-This starts a PostgreSQL 16 container on port 5432 using the config in `docker-compose.yml`.
+This starts PostgreSQL 16 and Redis 7 (`--maxmemory-policy noeviction`) from `docker-compose.yml`.
 
 ### 3. Configure environment
 
@@ -106,34 +68,38 @@ cp .env.example .env
 
 ```env
 DATABASE_URL=postgresql://postgres:postgrespassword@localhost:5432/foldex
+REDIS_URL=redis://localhost:6379
 RESEND_API_KEY=re_your_key_here
 BETTER_AUTH_SECRET=generate-with-openssl-rand-base64-32
+BETTER_AUTH_URL=http://localhost:3000
 FRONTEND_URL=http://localhost:3001
-ENCRYPTION_KEY=your_encryption_key
-# The URL of your local or cloud-hosted Manim Flask server
-MANIM_FLASK_URL=http://localhost:5000
+MANIM_FLASK_URL=http://localhost:5001
 ```
 
+Leave `COOKIE_DOMAIN` unset locally and on `*.onrender.com`. Set it to `.foldex.space` only when that custom domain is attached.
+
 To generate `BETTER_AUTH_SECRET`:
+
 ```bash
 openssl rand -base64 32
 ```
 
-### 4. Push database schema
+### 4. Apply database migrations
 
 ```bash
-bunx drizzle-kit push
+bun run db:migrate
 ```
 
-### 5. Run the server
+The API and worker also run pending Drizzle migrations on boot.
+
+### 5. Run the API and worker
 
 ```bash
-# Development (hot reload)
+# API (hot reload)
 bun dev
 
-# Production
-bun run build
-bun start
+# BullMQ worker (separate process — required for Render parity)
+bun run worker
 ```
 
 Server runs at `http://localhost:3000`.
@@ -144,67 +110,49 @@ Server runs at `http://localhost:3000`.
 
 ```
 src/
-  db/
-    schema.ts           # Drizzle schema — all tables and indexes
+  db/schema.ts              # Better Auth tables + videos + video_feedback
   lib/
-    auth.ts             # Better Auth instance with OTP plugin
-    db.ts               # Database connection (pg Pool + Drizzle)
-    ai-block-parser.ts  # Converts ai simplified json to blocknote + blocknote to markdown function
-    crypto.ts           # encrypt key + decrypt key logic 
-    manim-agent.ts      # manim specific agent for generating manim code for videos
-    noteagent.ts        # specialized note taking agent 
-    video-worker.ts     # BullMQ video generation configurations 
-  middleware/
-    requireauth.ts      # Session guard middleware
-  controllers/
-    notecontroller.ts            # Note CRUD logic
-    foldercontroller.ts          # Folder CRUD logic
-    templatecontroller.ts        # Template CRUD logic
-    chatcontroller.ts            # Chat + message logic
-    videocontroller.ts           # Video CRUD logic
-    settingscontroller.ts        # Settings CRUD + Prompt
-    apikeycontroller.ts          # Api CRUD + Validate logic
-
-  routes/
-    notesroute.ts           # /api/notes router
-    folderroute.ts          # /api/folders router
-    templateroute.ts        # /api/templates router
-    chatsroute.ts           # /api/chat router
-    airoute.ts              # /api/ai streaming 
-    videoroute.ts           # /api/videos router
-    settingsroute.ts        # /api/settings router  + BYOK CRUD Routes
-
-  
-  index.ts              # App entry point — mounts all routes
+    auth.ts                 # Better Auth + OTP email
+    db.ts                   # pg Pool (SSL on Render) + Drizzle
+    queue.ts                # BullMQ Queue only (API producer)
+    redis.ts                # ioredis (maxRetriesPerRequest: null)
+    video-schema.ts         # Zod bodies for Hono RPC
+    migrate.ts              # drizzle-orm migrator
+  middleware/requireauth.ts
+  controllers/videocontroller.ts
+  routes/videoroute.ts
+  app.ts                    # Hono app + AppType (imported by desktop)
+  index.ts                  # Bun HTTP entry
+  worker.ts                 # BullMQ Worker entry (do not import from the API)
 ```
 
 ---
 
 ## Database Schema
 
-Core tables: `user`, `session`, `account`, `verification` (Better Auth managed), `notes`, `folders`, `templates`, `chats`, `messages`,`videos`,`videofeedback`.
+Better Auth: `user`, `session`, `account`, `verification`.
 
-All note content is stored as `jsonb` (BlockNote JSON document).
-
-Run `bunx drizzle-kit studio` to browse your database with a visual UI.
+App: `videos`, `video_feedback`. Notes, folders, chats, templates, and API keys live in the desktop SQLite database.
 
 ---
 
 ## Deployment
 
-The backend is deployed via [Dokploy](https://dokploy.com) using Docker. A `Dockerfile` is included at the root.
+Production is a Render Blueprint (`render.yaml` at the repo root):
+
+| Service | Role |
+|---|---|
+| `foldex-web` | Landing site (TanStack Start SSR) |
+| `foldex-api` | Hono API |
+| `foldex-worker` | BullMQ consumer (same image, `bun run src/worker.ts`) |
+| `foldex-renderer` | Private Manim/Flask service |
+| `foldex-db` | Postgres |
+| `foldex-kv` | Redis-compatible Key Value, `noeviction` |
 
 ```bash
-# Build image locally to verify
-docker build -t foldex-backend .
-docker run -p 3000:3000 --env-file .env foldex-backend
+# Build the API image locally (from repo root)
+docker build -f apps/backend/Dockerfile -t foldex-api .
 ```
-
----
-
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ---
 

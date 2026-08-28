@@ -178,7 +178,7 @@ export function useGenerateVideo() {
         onError: (error: any) => {
             setStatus("failed");
             if (toastIdRef.current) toast.dismiss(toastIdRef.current);
-            const message = error?.response?.data?.error || error.message || "Failed to generate video";
+            const message = error instanceof Error ? error.message : "Failed to generate video";
             toast.error("Generation failed", { description: message });
         },
     });

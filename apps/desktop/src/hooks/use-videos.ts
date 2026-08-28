@@ -66,8 +66,7 @@ export function useUpdateVideo() {
     const queryClient = useQueryClient()
     return useMutation({
         mutationFn: async ({ id, data }: { id: string; data: { folderId?: string | null; isPublic?: boolean } }) => {
-            let finalData = { ...data };
-            return videoapi.update(id, { id, ...finalData });
+            return videoapi.update(id, data);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: queryKeys.videos.all })

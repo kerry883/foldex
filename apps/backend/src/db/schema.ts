@@ -1,7 +1,7 @@
-import { AnyPgColumn, boolean, index, integer, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, index, integer, jsonb, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import * as t from "drizzle-orm/pg-core";
 
-//the user,session,account,verification are copied from the better auth docs see:https://better-auth.com/docs/concepts/database#core-schema 
+// Copied from Better Auth docs: https://better-auth.com/docs/concepts/database#core-schema
 export const user = pgTable("user", {
 	id: t.text("id").primaryKey(),
 	name: t.text("name").notNull(),
@@ -11,7 +11,6 @@ export const user = pgTable("user", {
 	createdAt: t.timestamp("created_at", { precision: 6, withTimezone: true }).notNull(),
 	updatedAt: t.timestamp("updated_at", { precision: 6, withTimezone: true }).notNull(),
 });
-
 
 export const session = pgTable("session", {
 	id: t.text("id").primaryKey(),
@@ -23,7 +22,6 @@ export const session = pgTable("session", {
 	createdAt: t.timestamp("created_at", { precision: 6, withTimezone: true }).notNull(),
 	updatedAt: t.timestamp("updated_at", { precision: 6, withTimezone: true }).notNull(),
 });
-
 
 export const account = pgTable("account", {
 	id: t.text("id").primaryKey(),
@@ -49,115 +47,30 @@ export const verification = pgTable("verification", {
 	createdAt: t.timestamp("created_at", { precision: 6, withTimezone: true }).notNull(),
 	updatedAt: t.timestamp("updated_at", { precision: 6, withTimezone: true }).notNull(),
 });
-export const folders = pgTable("folders",{
-    id:uuid("id").defaultRandom().primaryKey(),
-    userId:text("userId").notNull().references(()=>user.id,{onDelete:"cascade"}),
-    name:text("name").notNull(),
-    parentId: uuid("parentId").references((): AnyPgColumn => folders.id, { onDelete: "cascade" }),
-    isPinned: boolean("isPinned").default(false).notNull(),
-    color: text("color").default("default").notNull(),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
-},(table)=>({
-     folderUserIdx: index("folders_user_id_idx").on(table.userId),
-}));
-
-export const notes = pgTable("notes",{
-    id:uuid("id").defaultRandom().primaryKey(),
-    userId:text("userId").notNull().references(()=>user.id,{onDelete:"cascade"}),
-    folderId:uuid("folderId").references(()=>folders.id,{onDelete:"cascade"}),
-    title:text("title").notNull().default("untitled"),
-    content:jsonb("content"),
-    isPinned:boolean("isPinned").default(false).notNull(),
-    updatedAt:timestamp("updatedAt").defaultNow().notNull(),
-    createdAt:timestamp("createdAt").defaultNow().notNull()
-},(table)=>({
-    notesUserIdx: t.index("notes_user_id_idx").on(table.userId),     // prefixed name
-    notesFolderIdx: t.index("notes_folder_id_idx").on(table.folderId),
-}))
-
-export const templates = pgTable("templates",{
-    id:uuid("id").defaultRandom().primaryKey(),
-    creatorId:text("creatorId").notNull().references(()=>user.id),
-    name:text("name").notNull(),
-    description:text("description"),
-    schemapayload:jsonb("schemapayload").notNull(),
-    ispublic:boolean("isPublic").notNull(),
-    createdAt:timestamp("createdAt").defaultNow().notNull(),
-    updatedAt:timestamp("updatedAt").defaultNow().notNull(),
-},(table)=>({
-    templatesCreatorIdx: t.index("templates_creator_id_idx").on(table.creatorId),
-}))
-
-export const chats = pgTable("chats",{
-    id:uuid("id").defaultRandom().primaryKey(),
-    title:text("title").notNull(),
-    userId:text("userId").notNull().references(()=>user.id,{onDelete:"cascade"}),
-    createdAt:timestamp("createdAt").defaultNow().notNull(),
-    updatedAt:timestamp("updatedAt").defaultNow().notNull(),
-},(table)=>({
-    chatsUserIdx:t.index("chats_user_id_idx").on(table.userId),
-    chatsUpdateAtIdx:t.index("chats_updatedAt_id_idx").on(table.updatedAt)
-})
-)
-
-export const messages = pgTable("messages",{
-    id:uuid("id").defaultRandom().primaryKey(),
-    chatId:uuid("chatId").notNull().references(()=>chats.id ,{onDelete:"cascade"}),
-    role:text("role").notNull(),
-    content:text("content").notNull(),
-    parts:jsonb("parts").notNull(),
-},(table)=>({
-   messageChatsIdx:t.index("message_chats_id_idx").on(table.chatId)
-}))
-
-export const apiKeys = pgTable("api_keys", {
-    id: uuid("id").defaultRandom().primaryKey(),
-    userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
-    provider: text("provider").notNull(),          // "openai" | "anthropic" | "google" | "deepseek" | "xai" | "moonshot" | "tavily"
-    encryptedKey: text("encryptedKey").notNull(),   // AES-256-GCM ciphertext (hex)
-    iv: text("iv").notNull(),                       // initialization vector (hex)
-    authTag: text("authTag").notNull(),             // GCM authentication tag (hex)
-    displayHint: text("displayHint").notNull(),     // masked key e.g. "sk-...ab3f"
-    isValid: boolean("isValid").default(true).notNull(),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
-}, (table) => ({
-    apiKeysUserIdx: t.index("api_keys_user_id_idx").on(table.userId),
-    apiKeysUniqueProviderPerUser: t.unique("api_keys_user_provider_unique").on(table.userId, table.provider),
-}))
-
-export const userSettings = pgTable("user_settings", {
-    id: uuid("id").defaultRandom().primaryKey(),
-    userId: text("userId").notNull().unique().references(() => user.id, { onDelete: "cascade" }),
-    systemPrompt: text("systemPrompt"),            // null = use default
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
-})
 
 export const videos = pgTable("videos", {
     id: uuid("id").defaultRandom().primaryKey(),
     userId: text("userId").references(() => user.id, { onDelete: "set null" }),
-    folderId: uuid("folderId").references(() => folders.id, { onDelete: "set null" }),
+    // Local desktop folder id — no cloud folders table
+    folderId: uuid("folderId"),
     title: text("title"),
     description: text("description"),
     transcript: text("transcript"),
-    url: text("url"), // R2 URL
-    filesize: integer("filesize"), // integer is fine for bytes, use bigint if expecting files > 2GB
+    url: text("url"),
+    filesize: integer("filesize"),
     thumbnail: text("thumbnail"),
-    prompt: text("prompt"), // Stored for client-side retry loops
+    prompt: text("prompt"),
     isPublic: boolean("isPublic").default(true),
     status: text("status", { enum: ["queued","generating", "ready", "failed"] }).notNull().default("queued"),
-    // Array of objects { title: string, url: string, snippet: string }
-    sources: jsonb("sources"), 
+    sources: jsonb("sources"),
     creatorname: text("creatorname"),
     creatorprofile: text("creatorprofile"),
     code: text("code"),
     model: text("model"),
-    tags: jsonb("tags"),  // string[] — auto-generated topic tags
-    errorTraceback: text("error_traceback"),    
+    tags: jsonb("tags"),
+    errorTraceback: text("error_traceback"),
     likes: integer("likes").default(0),
-    dislikes: integer("dislikes").default(0),    
+    dislikes: integer("dislikes").default(0),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 }, (table) => ({
@@ -173,10 +86,8 @@ export const videoFeedback = pgTable("video_feedback", {
     videoId: uuid("videoId").notNull().references(() => videos.id, { onDelete: "cascade" }),
     userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
     type: text("type", { enum: ["like", "dislike"] }).notNull(),
-    
-    // Array of strings
     tags: jsonb("tags"),
-    comment: text("comment"),    
+    comment: text("comment"),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
 }, (table) => ({
     feedbackVideoIdx: index("feedback_video_id_idx").on(table.videoId),
