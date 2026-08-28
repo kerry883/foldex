@@ -1,10 +1,10 @@
 //@ts-nocheck
 import { ArrowRight, ChevronRight } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import { Button } from '@workspace/ui/components/button'
 import { AnimatedGroup } from '@/components/motion-primitives/animated-group'
 import { TextEffect } from '../motion-primitives/text-effect'
 import { HeroHeader } from './hero-header'
-import { siteConfig } from '@/lib/site'
 
 const transitionVariants = {
     item: {
@@ -139,9 +139,9 @@ export default function HeroSection() {
                                             asChild
                                             size="lg"
                                             className="rounded-xl px-5 text-base">
-                                            <a href={siteConfig.downloadUrl}>
+                                            <Link to="/download">
                                                 <span className="text-nowrap">Download Desktop App</span>
-                                            </a>
+                                            </Link>
                                         </Button>
                                     </div>
                                     <Button

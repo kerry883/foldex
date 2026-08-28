@@ -1,8 +1,7 @@
 import { cn } from '@workspace/ui/lib/utils'
 import { Button } from '@workspace/ui/components/button'
 import { InfiniteSlider } from '@/components/motion-primitives/infinite-slider'
-
-import { siteConfig } from '@/lib/site'
+import { Link } from '@tanstack/react-router'
 
 export default function IntegrationsSection() {
     return (
@@ -106,7 +105,7 @@ export default function IntegrationsSection() {
                             variant="outline"
                             size="sm"
                             asChild>
-                            <a href={siteConfig.downloadUrl}>Get Started</a>
+                            <Link to="/download">Get Started</Link>
                         </Button>
                     </div>
                 </div>

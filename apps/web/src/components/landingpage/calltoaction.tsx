@@ -1,7 +1,6 @@
 import { Button } from "@workspace/ui/components/button";
 import { ArrowRight, Sparkles } from "lucide-react";
-
-import { siteConfig } from "@/lib/site";
+import { Link } from "@tanstack/react-router";
 
 export default function CallToAction() {
   return (
@@ -36,10 +35,10 @@ export default function CallToAction() {
                 size="lg"
                 className="h-12 rounded-full px-8 text-base transition-transform hover:scale-105"
               >
-                <a href={siteConfig.downloadUrl}>
+                <Link to="/download">
                   Get Started for Free
                   <ArrowRight className="ml-2 size-4" />
-                </a>
+                </Link>
               </Button>
             </div>
 

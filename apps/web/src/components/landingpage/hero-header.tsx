@@ -7,6 +7,7 @@ import { cn } from '@workspace/ui/lib/utils'
 import { siteConfig } from '@/lib/site'
 
 const menuItems = [
+    { name: 'Download', to: '/download' },
     { name: 'Pricing', to: '/pricing' },
     { name: 'About', to: '/about' },
 ] as const
@@ -89,17 +90,17 @@ export const HeroHeader = () => {
                                     asChild
                                     size="sm"
                                     className={cn(isScrolled && 'lg:hidden')}>
-                                    <a href={siteConfig.downloadUrl}>
+                                    <Link to="/download">
                                         <span>Download</span>
-                                    </a>
+                                    </Link>
                                 </Button>
                                 <Button
                                     asChild
                                     size="sm"
                                     className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
-                                    <a href={siteConfig.downloadUrl}>
+                                    <Link to="/download">
                                         <span>Download</span>
-                                    </a>
+                                    </Link>
                                 </Button>
                             </div>
                         </div>

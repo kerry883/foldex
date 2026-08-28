@@ -4,6 +4,10 @@ import { siteConfig } from "@/lib/site";
 
 const links = [
   {
+    title: "Download",
+    to: "/download",
+  },
+  {
     title: "Pricing",
     to: "/pricing",
   },
