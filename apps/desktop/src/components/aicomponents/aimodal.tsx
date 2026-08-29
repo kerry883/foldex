@@ -64,6 +64,7 @@ import type { SuggestionItem } from "./suggestion-list";
 import { useFolders } from "@/hooks/use-folders";
 import { useNotes } from "@/hooks/use-notes";
 import { type ParsedAttachment, useFileParser } from "@/hooks/use-file-parser";
+import { Logo } from "@/components/logo";
 
 
 const PromptInputAttachmentsDisplay = ({ 
@@ -360,7 +361,7 @@ const AiModalComponent = () => {
           <ConversationContent>
             {messages.length === 0 && (
              <ConversationEmptyState
-                icon={<img src="/icon310x310.png" alt="folder" width="48" height="48" />}
+                icon={<Logo width={48} height={48} className="text-foreground" />}
                 title="Start a new Chat"
                 description="Ask Questions,Summarize,and create something new"
               />

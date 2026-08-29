@@ -3,6 +3,7 @@ import { motion, type Variants } from "framer-motion";
 import { AuthForm } from "@/components/auth/authcomponent";
 import { HugeiconsIcon } from '@hugeicons/react'
 import {Bug02FreeIcons, MailWarning, QuoteUpIcon} from '@hugeicons/core-free-icons'
+import { Logo } from "@/components/logo";
 
 export const Route = createLazyFileRoute('/signin')({
   component: SignInPage,
@@ -38,7 +39,7 @@ function SignInPage() {
         <div className="flex justify-center gap-2 md:justify-start">
           <Link to='/'className="flex items-center gap-2 font-medium">
             <div className="flex size-6 items-center justify-center rounded-md ">
-              <img src="/icon.png" alt="folder" width="32" height="32" />
+              <Logo width={24} height={24} className="text-foreground" />
             </div>
           </Link>
         </div>
@@ -59,11 +60,13 @@ function SignInPage() {
           animate="visible"
         >
           <motion.div variants={itemVariants} className="space-y-6">
-            <img 
-              src="/icon310x310.png" 
-              alt="Foldex Logo" 
-              className="w-20 h-20 rounded-2xl shadow-sm border border-border"
-            />
+            <div
+              role="img"
+              aria-label="Foldex logo"
+              className="flex w-20 h-20 items-center justify-center rounded-2xl shadow-sm border border-border"
+            >
+              <Logo width={44} height={44} className="text-foreground" />
+            </div>
           </motion.div>
 
           <motion.div variants={itemVariants} className="relative">

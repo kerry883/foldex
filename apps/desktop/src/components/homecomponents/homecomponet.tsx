@@ -49,6 +49,7 @@ import { useSession } from "@/hooks/use-auth"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Alert01FreeIcons, Delete02FreeIcons, GridViewFreeIcons, Home03FreeIcons, LeftToRightListBulletFreeIcons, Search01FreeIcons, SlidersHorizontalFreeIcons } from "@hugeicons/core-free-icons"
 import { AlertTriangle, Grid2X2, Home, List, Search, SlidersHorizontal, Trash } from "lucide-react"
+import { Logo } from "@/components/logo"
 
 type SortOption = "A-Z" | "Z-A" | "Newest" | "Oldest"
 type ViewFilter = "all" | "notes" | "videos"
@@ -414,7 +415,7 @@ export function HomeComponent() {
                   <Empty>
                     <EmptyHeader>
                       <EmptyMedia variant="icon">
-                        <img src="/icon.png" alt="folder" width="32" height="32" />
+                        <Logo width={32} height={32} className="text-foreground" />
                       </EmptyMedia>
                       <EmptyTitle>
                         No {viewFilter === "videos" ? "videos" : "notes"} Yet

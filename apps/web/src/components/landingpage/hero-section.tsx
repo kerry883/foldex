@@ -14,59 +14,62 @@ export default function HeroSection() {
                     <div className="relative pt-24 lg:pt-40">
                         <div className="space-y-12 md:space-y-16">
                             <div className="relative mx-auto max-w-7xl px-6">
-                                <a
-                                    href="/"
-                                    className="flex w-fit items-center gap-2 font-medium">
-                                    <span>New</span>
-                                    <span className="text-muted-foreground">Foldex 1.0 - AI-Powered Learning</span>
-
+                                <Link
+                                    to="/download"
+                                    className="text-muted-foreground hover:text-foreground flex w-fit items-center gap-2 font-medium duration-150">
+                                    <span className="text-foreground">New</span>
+                                    <span>Foldex 1.0 — bring your own AI models</span>
                                     <ArrowRight className="size-3.5" />
-                                </a>
+                                </Link>
 
                                 <div className="mt-8 grid items-end gap-4 md:grid-cols-2 md:gap-6">
                                     <h1 className="text-balance text-5xl font-medium tracking-tight md:text-6xl xl:text-7xl">
-                                        Your AI Learning Canvas
+                                        Your personal learning workspace
                                     </h1>
-                                    <div className="mx-auto flex max-w-md flex-col gap-6">
+                                    <div className="flex max-w-md flex-col gap-6 md:mx-auto">
                                         <p className="text-muted-foreground text-balance text-lg">
-                                            Local-first notes, custom blocks, and bring your own AI models. Master your learning with complete privacy.
+                                            Notes, folders and AI-assisted study in one local-first desktop app. Your
+                                            files stay on your machine, and you plug in whichever AI model you already
+                                            pay for.
                                         </p>
 
-                                        <Button
-                                            asChild
-                                            size="lg"
-                                            className="w-fit rounded-xl px-5">
-                                            <Link to="/download">
-                                                Get Started
-                                            </Link>
-                                        </Button>
+                                        <div className="flex flex-wrap items-center gap-3">
+                                            <Button asChild size="lg" className="rounded-xl px-5">
+                                                <Link to="/download">Download for free</Link>
+                                            </Button>
+                                            <Button asChild size="lg" variant="ghost" className="rounded-xl px-5">
+                                                <a href={siteConfig.githubUrl} target="_blank" rel="noreferrer">
+                                                    View on GitHub
+                                                </a>
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="mx-auto max-w-7xl max-xl:px-2">
                                 <div className="bg-muted md:aspect-5/3 relative aspect-square overflow-hidden rounded-3xl lg:aspect-video">
-                                    <div className="bg-background min-w-4xl lg:min-w-5xl xl:min-w-7xl ring-foreground/6.5 before:mask-radial-at-top-left before:mask-radial-from-65% before:mask-radial-[100%_60%] before:ring-foreground before:border-foreground/10 absolute left-4 top-4 z-10 rounded-2xl p-2 shadow-lg ring before:absolute before:-inset-px before:z-10 before:size-56 before:rounded-tl-2xl before:border-l before:border-t lg:left-16 lg:top-16">
-                                        <div
-                                            aria-hidden
-                                            className="bg-foreground/2 z-1 absolute inset-0 rounded-2xl"
+                                    <div
+                                        aria-hidden
+                                        className="absolute inset-0 [background:radial-gradient(75%_75%_at_20%_10%,var(--color-primary)/12%_0,transparent_70%),radial-gradient(60%_60%_at_85%_90%,var(--color-foreground)/8%_0,transparent_70%)]"
+                                    />
+
+                                    <div className="bg-background min-w-4xl lg:min-w-5xl xl:min-w-7xl ring-foreground/10 absolute left-4 top-4 z-10 rounded-2xl p-2 shadow-2xl shadow-black/20 ring-1 lg:left-16 lg:top-16">
+                                        <img
+                                            className="bg-background aspect-15/8 relative hidden rounded-2xl dark:block"
+                                            src="/app-preview.svg"
+                                            alt="Foldex desktop app showing notes organised in folders alongside an AI chat panel"
+                                            width="1500"
+                                            height="800"
                                         />
                                         <img
-                                            className="bg-background aspect-15/8 relative rounded-2xl object-cover"
-                                            src="/app-preview.png"
-                                            alt="The foldex workspace with the folder sidebar, search bar and video library"
-                                            width="1024"
-                                            height="554"
+                                            className="bg-background border-border/25 aspect-15/8 relative rounded-2xl border dark:hidden"
+                                            src="/app-preview-light.svg"
+                                            alt="Foldex desktop app showing notes organised in folders alongside an AI chat panel"
+                                            width="1500"
+                                            height="800"
                                         />
                                     </div>
-
-                                    <img
-                                        src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                        alt=""
-                                        width={2070}
-                                        height={1380}
-                                        className="size-full rounded-3xl object-cover object-center"
-                                    />
                                 </div>
                             </div>
                         </div>
