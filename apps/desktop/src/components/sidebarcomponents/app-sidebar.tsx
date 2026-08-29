@@ -22,6 +22,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@workspace/ui/components/d
 import SettingsComponent from "../settingscomponents/settings-component"
 import { useSettingsStore } from "@/stores/settingsstore"
 import { Suspense } from "react"
+import { Logo } from "@/components/logo"
 
 // This is sample data
 const data = {
@@ -70,7 +71,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
-                  <img src="/icon310x310.png" alt="folder" width="32" height="32" />
+                  <Logo width={32} height={32} className="text-foreground" />
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>

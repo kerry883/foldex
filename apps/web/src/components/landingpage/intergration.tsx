@@ -94,7 +94,7 @@ export default function IntegrationsSection() {
                             <IntegrationCard
                                 className="shadow-black-950/10 size-16 bg-white/25 shadow-xl backdrop-blur-md backdrop-grayscale dark:border-white/10 dark:shadow-white/15"
                                 isCenter={true}>
-                                <Logo width={32} height={32} className="text-white" />
+                                <Logo width={32} height={32} className="text-foreground" />
                             </IntegrationCard>
                         </div>
                     </div>

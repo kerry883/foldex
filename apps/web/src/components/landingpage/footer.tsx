@@ -22,7 +22,11 @@ export default function FooterSection() {
   return (
     <footer className="py-16 md:py-32">
       <div className="mx-auto max-w-5xl px-6">
-        <Link to="/" aria-label="go home" className="mx-auto block size-fit text-white">
+        <Link
+          to="/"
+          aria-label="go home"
+          className="text-foreground mx-auto block size-fit"
+        >
           <Logo width={32} height={32} />
         </Link>
 

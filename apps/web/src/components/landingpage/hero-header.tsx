@@ -35,7 +35,7 @@ export const HeroHeader = () => {
                             <Link
                                 to="/"
                                 aria-label="home"
-                                className="flex items-center space-x-2 text-white" >
+                                className="text-foreground flex items-center space-x-2" >
                                 <Logo width={32} height={32} />
                             </Link>
 
