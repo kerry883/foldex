@@ -1,87 +1,81 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar'
+import { Avatar, AvatarFallback } from '@workspace/ui/components/avatar'
 import { Card, CardContent } from '@workspace/ui/components/card'
 
 type Testimonial = {
     name: string
     role: string
-    image: string
     quote: string
 }
 
 const testimonials: Testimonial[] = [
     {
-        name: 'Jonathan Yombo',
-        role: 'Software Engineer',
-        image: 'https://randomuser.me/api/portraits/men/1.jpg',
-        quote: 'Tailus is really extraordinary and very practical, no need to break your head. A real gold mine.',
+        name: 'Wanjiru Kamau',
+        role: 'Computer Science Student, University of Nairobi',
+        quote: 'Campus wifi drops almost every afternoon, but foldex keeps working. My notes live on my laptop, so a bad connection stopped being an excuse not to revise.',
     },
     {
-        name: 'Yves Kalume',
-        role: 'GDE - Android',
-        image: 'https://randomuser.me/api/portraits/men/6.jpg',
-        quote: 'With no experience in webdesign I just redesigned my entire website in a few minutes with tailwindcss thanks to Tailus.',
+        name: 'Brian Otieno',
+        role: 'Software Developer, Nairobi',
+        quote: 'Another dollar subscription was never going to happen. I plugged in my own Gemini key and now I only pay for what I actually use.',
     },
     {
-        name: 'Yucel Faruksahan',
-        role: 'Tailkits Creator',
-        image: 'https://randomuser.me/api/portraits/men/7.jpg',
-        quote: 'Great work on tailfolio template. This is one of the best personal website that I have seen so far :)',
+        name: 'Amina Hassan',
+        role: 'Lecturer, Technical University of Mombasa',
+        quote: 'I generate a short animation for the concepts my students always struggle with. Explaining Fourier transforms with a narrated video beats another chalkboard diagram.',
     },
     {
-        name: 'Anonymous author',
-        role: 'Doing something',
-        image: 'https://randomuser.me/api/portraits/men/8.jpg',
-        quote: 'I am really new to Tailwind and I want to give a go to make some page on my own. I searched a lot of hero pages and blocks online. However, most of them are not giving me a clear view or needed some HTML/CSS coding background to make some changes from the original or too expensive to have. I downloaded the one of Tailus template which is very clear to understand at the start and you could modify the codes/blocks to fit perfectly on your purpose of the page.',
+        name: 'Kiprotich Langat',
+        role: 'Actuarial Science Student, JKUAT',
+        quote: 'The flashcards it builds from my own notes carried me through second year stats. It quizzes me on what I actually wrote, not some generic question bank.',
     },
     {
-        name: 'Shekinah Tshiokufila',
-        role: 'Senior Software Engineer',
-        image: 'https://randomuser.me/api/portraits/men/4.jpg',
-        quote: 'Tailus is redefining the standard of web design, with these blocks it provides an easy and efficient way for those who love beauty but may lack the time to implement it. I can only recommend this incredible wonder.',
+        name: 'Sharon Nekesa',
+        role: 'Medical Student, Moi University',
+        quote: 'I dropped three years of lecture PDFs into it and every one was parsed. Anatomy revision finally lives in one place instead of a WhatsApp group.',
     },
     {
-        name: 'Oketa Fred',
-        role: 'Fullstack Developer',
-        image: 'https://randomuser.me/api/portraits/men/2.jpg',
-        quote: 'I absolutely love Tailus! The component blocks are beautifully designed and easy to use, which makes creating a great-looking website a breeze.',
+        name: 'Collins Barasa',
+        role: 'Data Analyst, Westlands',
+        quote: 'A blackout hit in the middle of writing up an analysis and I lost nothing. Everything is in a local database, so the app is never waiting on someone else’s server.',
     },
     {
-        name: 'Zeki',
-        role: 'Founder of ChatExtend',
-        image: 'https://randomuser.me/api/portraits/men/5.jpg',
-        quote: "Using TailsUI has been like unlocking a secret design superpower. It's the perfect fusion of simplicity and versatility, enabling us to create UIs that are as stunning as they are user-friendly.",
+        name: 'Mercy Wairimu',
+        role: 'Form Four Student, Nakuru',
+        quote: 'My physics teacher showed us foldex during prep. Now I write my own revision notes and the AI checks whether I actually understood them.',
     },
     {
-        name: 'Joseph Kitheka',
-        role: 'Fullstack Developer',
-        image: 'https://randomuser.me/api/portraits/men/9.jpg',
-        quote: 'Tailus has transformed the way I develop web applications. Their extensive collection of UI components, blocks, and templates has significantly accelerated my workflow. The flexibility to customize every aspect allows me to create unique user experiences. Tailus is a game-changer for modern web development!',
+        name: 'Dennis Mutua',
+        role: 'Backend Engineer, Moringa School alumnus',
+        quote: 'Diagrams and code blocks sit right next to my study notes. I stopped juggling one app for documentation and another for learning.',
     },
     {
-        name: 'Khatab Wedaa',
-        role: 'MerakiUI Creator',
-        image: 'https://randomuser.me/api/portraits/men/10.jpg',
-        quote: "Tailus is an elegant, clean, and responsive tailwind css components it's very helpful to start fast with your project.",
+        name: 'Faith Chebet',
+        role: 'Agricultural Economics Student, Egerton University',
+        quote: 'Bundles are expensive here. Knowing my notes are not syncing to a cloud on every keystroke genuinely saves me money.',
     },
     {
-        name: 'Rodrigo Aguilar',
-        role: 'TailwindAwesome Creator',
-        image: 'https://randomuser.me/api/portraits/men/11.jpg',
-        quote: 'I love Tailus ❤️. The component blocks are well-structured, simple to use, and beautifully designed. It makes it really easy to have a good-looking website in no time.',
+        name: 'Salim Bakari',
+        role: 'ICT Teacher, Malindi',
+        quote: 'Our lab machines are old and offline for half the term. This is the first tool I have found that does not fall apart without internet.',
     },
     {
-        name: 'Eric Ampire',
-        role: 'Mobile Engineer at @BRPNews • @GoogleDevExpert for Android',
-        image: 'https://randomuser.me/api/portraits/men/12.jpg',
-        quote: 'Tailus templates are the perfect solution for anyone who wants to create a beautiful and functional website without any web design experience. The templates are easy to use, customizable, and responsive, and the support team is always available to help. I highly recommend Tailus templates to anyone who is looking to create a website.',
+        name: 'Purity Nduta',
+        role: 'Engineering Student, Dedan Kimathi University of Technology',
+        quote: 'I asked it to animate how a cantilever beam deflects and had a narrated video in minutes. That is the part a textbook could never do for me.',
     },
     {
-        name: 'Roland Tubonge',
-        role: 'Software Engineer',
-        image: 'https://randomuser.me/api/portraits/men/13.jpg',
-        quote: 'Tailus is so well designed that even with a very poor knowledge of web design you can do miracles. Let yourself be seduced!',
+        name: 'Victor Ochieng',
+        role: 'Freelance Developer, Kisumu',
+        quote: 'Open source, and my API keys stay in a vault on my own machine. As someone who reads the code before installing anything, that mattered more than any feature.',
     },
 ]
+
+const getInitials = (name: string) =>
+    name
+        .split(' ')
+        .slice(0, 2)
+        .map((part) => part.charAt(0))
+        .join('')
 
 const chunkArray = (array: Testimonial[], chunkSize: number): Testimonial[][] => {
     const result: Testimonial[][] = []
@@ -100,25 +94,18 @@ export default function WallOfLoveSection() {
                 <div className="mx-auto max-w-6xl px-6">
                     <div className="text-center">
                         <h2 className="text-3xl font-semibold">Loved by the Community</h2>
-                        <p className="mt-6">See what our early adopters are saying about their new productivity workflows.</p>
+                        <p className="mt-6">From lecture halls in Nairobi to prep rooms in Kisumu, here is what students, teachers and developers across Kenya are saying.</p>
                     </div>
                     <div className="mt-8 grid gap-3 sm:grid-cols-2 md:mt-12 lg:grid-cols-3">
                         {testimonialChunks.map((chunk, chunkIndex) => (
                             <div
                                 key={chunkIndex}
                                 className="*:bg-muted space-y-3 *:border-none *:shadow-none">
-                                {chunk.map(({ name, role, quote, image }, index) => (
+                                {chunk.map(({ name, role, quote }, index) => (
                                     <Card key={index}>
                                         <CardContent className="grid grid-cols-[auto_1fr] gap-3 pt-6">
                                             <Avatar className="size-9">
-                                                <AvatarImage
-                                                    alt={name}
-                                                    src={image}
-                                                    loading="lazy"
-                                                    width="120"
-                                                    height="120"
-                                                />
-                                                <AvatarFallback>ST</AvatarFallback>
+                                                <AvatarFallback>{getInitials(name)}</AvatarFallback>
                                             </Avatar>
 
                                             <div>
