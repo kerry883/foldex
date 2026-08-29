@@ -456,15 +456,31 @@ Tauri refuses unsigned updates, so a keypair is mandatory.
 
 ```bash
 cd apps/desktop
-bunx tauri signer generate -w ~/.tauri/foldex.key
+# Use -p so the password is not mangled by an interactive prompt.
+# Avoid ! $ ` \ in the password.
+bunx tauri signer generate -w ~/.tauri/foldex.key -p 'your-password'
 ```
 
-The **public** key goes in `plugins.updater.pubkey` in `tauri.conf.json` and is safe to commit. The **private** key becomes a repository secret:
+The CLI prints a **public** key (starts with `dW50cnVzdGVk...`). Put that in `plugins.updater.pubkey` in `tauri.conf.json` — it is safe to commit.
+
+The private key file looks like this (two lines; both are required):
+
+```
+untrusted comment: minisign encrypted secret key
+RWRTY0Iy...base64...
+```
+
+`Missing comment in secret key` means GitHub got only the base64 line, or newlines were stripped.
+
+Add **repository** secrets (Settings → Secrets and variables → Actions → Repository secrets — not Environment secrets):
 
 | Secret | Value |
 |---|---|
-| `TAURI_SIGNING_PRIVATE_KEY` | Contents of the private key file |
-| `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` | The key's password, or empty if it has none |
+| `TAURI_SIGNING_PRIVATE_KEY` | Entire file, including the `untrusted comment:` line |
+| `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` | The `-p` password. If you generated with an empty password, leave this secret **unset** (do not store a dummy value) |
+| `VITE_GOOGLE_SEARCH_API_KEY` | YouTube Data API key for in-app video search |
+
+If this public key in the repo already matches a private key you generated earlier, **do not generate a new pair** — paste that same private file into the secret. A new pair must replace `pubkey` in `tauri.conf.json` or updates will fail to verify.
 
 > Losing the private key means you can never ship an update to already-installed apps again. Back it up somewhere durable.
 
