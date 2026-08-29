@@ -69,14 +69,15 @@ export function useGenerateVideo() {
                     stopPolling();
                     setStatus("failed");
                     if (toastIdRef.current) toast.dismiss(toastIdRef.current);
-                    // Show retry button instead of dumping the full traceback
+                    const error = result.error?.trim() || "No error stored on this video";
+                    console.error("[useGenerateVideo] render failed", { videoId: id, error });
                     toast.error("Video generation failed", {
-                        description: "The renderer encountered an error.",
+                        description: error.slice(0, 400),
                         action: {
                             label: "Retry",
                             onClick: () => handleRetry(id),
                         },
-                        duration: 15000,
+                        duration: 20000,
                     });
                     queryClient.invalidateQueries({ queryKey: queryKeys.videos.all });
                 } else if (result.status === "generating") {

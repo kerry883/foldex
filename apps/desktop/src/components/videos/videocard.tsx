@@ -119,6 +119,11 @@ const Videocard = ({ videoId, onClick, allowed }: VideocardProps) => {
             <p className="text-xs text-muted-foreground">
               Unable to generate video
             </p>
+            {video.errorTraceback ? (
+              <pre className="text-[11px] leading-snug text-destructive/90 font-mono whitespace-pre-wrap break-words max-h-28 overflow-y-auto">
+                {video.errorTraceback}
+              </pre>
+            ) : null}
           </div>
 
           {/* Status badge */}
