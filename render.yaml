@@ -44,7 +44,7 @@ services:
           type: keyvalue
           property: connectionString
       - key: MANIM_FLASK_URL
-        value: http://foldex-renderer:10000
+        sync: false
       - key: FRONTEND_URL
         sync: false
       - key: BETTER_AUTH_URL
@@ -74,7 +74,7 @@ services:
           type: keyvalue
           property: connectionString
       - key: MANIM_FLASK_URL
-        value: http://foldex-renderer:10000
+        sync: false
 
   - type: pserv
     name: foldex-renderer
@@ -94,6 +94,8 @@ services:
       - key: R2_BUCKET_NAME
         sync: false
       - key: R2_PUBLIC_URL
+        sync: false
+      - key: GOOGLE_CREDENTIALS_JSON
         sync: false
 
   - type: keyvalue

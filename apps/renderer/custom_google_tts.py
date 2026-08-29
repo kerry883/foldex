@@ -34,12 +34,17 @@ class CustomGoogleService(SpeechService):
                 creds_path = Path(credentials_file)
                 credentials = service_account.Credentials.from_service_account_file(str(creds_path))
                 print(f"[OK] Loaded credentials from: {creds_path}")
-            
-            # Auto-discovery for local development (looking for specific json file)
+
+            elif os.getenv("GOOGLE_CREDENTIALS_JSON"):
+                credentials = service_account.Credentials.from_service_account_info(
+                    json.loads(os.environ["GOOGLE_CREDENTIALS_JSON"])
+                )
+                print("[OK] Loaded credentials from GOOGLE_CREDENTIALS_JSON")
+
             elif os.getenv("GOOGLE_APPLICATION_CREDENTIALS"):
-                creds_path = Path.cwd() / "manim-video-gen-480123-06fea24b1b85.json"
+                creds_path = Path(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
                 credentials = service_account.Credentials.from_service_account_file(str(creds_path))
-                print(f"[OK] Found local credentials file: {creds_path}")
+                print(f"[OK] Loaded credentials from: {creds_path}")
             
             else:
                 # FALLBACK: Use Google Cloud Default Credentials (ADC)
