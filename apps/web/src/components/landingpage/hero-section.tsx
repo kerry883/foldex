@@ -52,11 +52,11 @@ export default function HeroSection() {
                                             className="bg-foreground/2 z-1 absolute inset-0 rounded-2xl"
                                         />
                                         <img
-                                            className="bg-background aspect-15/8 relative rounded-2xl"
-                                            src="/app-preview.svg"
-                                            alt="app screen"
-                                            width="2700"
-                                            height="1440"
+                                            className="bg-background aspect-15/8 relative rounded-2xl object-cover"
+                                            src="/app-preview.png"
+                                            alt="The foldex workspace with the folder sidebar, search bar and video library"
+                                            width="1024"
+                                            height="554"
                                         />
                                     </div>
 
