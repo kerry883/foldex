@@ -39,7 +39,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDY2QTNDNzQ0MTUyMUMxREEKUldUYXdTRVZSTWVqWmdsMTEzaDJZR1o3U2tSWTlFemtiMXVQdE4xa3RzWnNsZncrRWpyaFU5UFcK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDVCQjI0NUEyOEU1RDU0QTIKUldTaVZGMk9va1d5VzRtUmdWblhpekhQT2lhaEd3bTFDM2grWDE1VmJQYm5aRTl1WlVJRWFwcFEK",
       "endpoints": [
         "https://github.com/kerry883/foldex/releases/latest/download/latest.json"
       ],

@@ -2,7 +2,7 @@ import { hc } from "hono/client"
 import type { InferRequestType, InferResponseType } from "hono/client"
 import type { AppType } from "backend/app"
 
-const apiUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3000"
+const apiUrl = import.meta.env.VITE_API_URL ?? "https://api.foldex.space"
 
 export const client = hc<AppType>(apiUrl, {
   init: { credentials: "include" },
