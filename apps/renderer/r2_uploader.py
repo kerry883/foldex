@@ -21,13 +21,25 @@ class R2Uploader:
         self.bucket_name = os.getenv("R2_BUCKET_NAME")
         self.public_url = os.getenv("R2_PUBLIC_URL")
 
-        #configur s3 client for R2
+        print(
+            f"[R2] client endpoint=https://{self.account_id}.r2.cloudflarestorage.com "
+            f"bucket={self.bucket_name} public_url={self.public_url} "
+            f"access_key_set={bool(self.access_key)} secret_set={bool(self.secret_key)}"
+        )
+
+        # path-style + delayed checksums: virtual-hosted R2 URLs often fail TLS
+        # from Cloud Run (sslv3 alert handshake failure).
         self.s3_client = boto3.client(
             's3',
             endpoint_url=f'https://{self.account_id}.r2.cloudflarestorage.com',
             aws_access_key_id=self.access_key,
             aws_secret_access_key=self.secret_key,
-            config=Config(signature_version='s3v4'),
+            config=Config(
+                signature_version='s3v4',
+                s3={'addressing_style': 'path'},
+                request_checksum_calculation='when_required',
+                response_checksum_validation='when_required',
+            ),
             region_name='auto'
         )
     
@@ -61,6 +73,7 @@ class R2Uploader:
         if content_type is None:
             content_type = "application/octet-stream"
 
+        print(f"[R2] uploading {file_path.name} -> {self.bucket_name}/{object_name} ({file_path.stat().st_size} bytes)")
         try:
             self.s3_client.upload_file(
                 str(file_path),
@@ -71,6 +84,7 @@ class R2Uploader:
                     'CacheControl':'public, max-age=31536000',
                 }
             )
+            print(f"[R2] upload ok {self.public_url}/{object_name}")
 
             public_url = f"{self.public_url}/{object_name}"
 
@@ -83,6 +97,7 @@ class R2Uploader:
                 "content_type": content_type,
             }
         except Exception as e:
+            print(f"[R2] upload failed: {e}")
             return {
                 "success":False,
                 "error": str(e)

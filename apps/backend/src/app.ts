@@ -1,10 +1,12 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { logger } from "hono/logger";
 import { auth } from "./lib/auth";
 import type { Appvariables } from "./env";
 import videoRouter from "./routes/videoroute";
 
 const app = new Hono<{ Variables: Appvariables }>()
+  .use("*", logger())
   .use(
     "*",
     cors({

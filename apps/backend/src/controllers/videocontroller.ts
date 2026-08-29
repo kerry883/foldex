@@ -112,7 +112,7 @@ export const generatevideo = async (c: AuthedContext) => {
     })
     .returning();
 
-  await videoQueue.add(
+  const job = await videoQueue.add(
     "render-job",
     {
       videoId: video.id,
@@ -128,6 +128,15 @@ export const generatevideo = async (c: AuthedContext) => {
       removeOnFail: false,
     },
   );
+
+  console.log("[api] enqueued video render", {
+    videoId: video.id,
+    jobId: job.id,
+    sceneName: body.sceneName,
+    codeChars: body.code.length,
+    hasTranscript: Boolean(body.transcript),
+    remaining: remaining - 1,
+  });
 
   return c.json({ success: true, videoId: video.id, remaining: remaining - 1 }, 202);
 };
@@ -349,7 +358,7 @@ export const retryVideo = async (c: AuthedContext) => {
     })
     .where(eq(videos.id, videoId));
 
-  await videoQueue.add(
+  const job = await videoQueue.add(
     "render-job",
     {
       videoId,
@@ -365,6 +374,13 @@ export const retryVideo = async (c: AuthedContext) => {
       removeOnFail: false,
     },
   );
+
+  console.log("[api] enqueued video retry", {
+    videoId,
+    jobId: job.id,
+    sceneName: body.sceneName,
+    codeChars: body.code.length,
+  });
 
   return c.json({ success: true, videoId, explanation: "Queued with desktop-fixed code" }, 202);
 };
