@@ -5,6 +5,7 @@ import React from 'react'
 import { cn } from '@workspace/ui/lib/utils'
 
 import { siteConfig } from '@/lib/site'
+import { Logo } from '@/components/logo'
 
 const menuItems = [
     { name: 'Download', to: '/download' },
@@ -34,8 +35,8 @@ export const HeroHeader = () => {
                             <Link
                                 to="/"
                                 aria-label="home"
-                                className="flex items-center space-x-2" >
-                                <img src="/icon.png" alt="folder" width="32" height="32" />
+                                className="flex items-center space-x-2 text-white" >
+                                <Logo width={32} height={32} />
                             </Link>
 
                             <button

@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 import { siteConfig } from "@/lib/site";
+import { Logo } from "@/components/logo";
 
 const links = [
   {
@@ -21,8 +22,8 @@ export default function FooterSection() {
   return (
     <footer className="py-16 md:py-32">
       <div className="mx-auto max-w-5xl px-6">
-        <Link to="/" aria-label="go home" className="mx-auto block size-fit">
-          <img src="/icon.png" alt="folder" width="32" height="32" />
+        <Link to="/" aria-label="go home" className="mx-auto block size-fit text-white">
+          <Logo width={32} height={32} />
         </Link>
 
         <div className="my-8 flex flex-wrap justify-center gap-6 text-sm">
