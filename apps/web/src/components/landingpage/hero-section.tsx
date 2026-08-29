@@ -5,6 +5,7 @@ import { Button } from '@workspace/ui/components/button'
 import { AnimatedGroup } from '@/components/motion-primitives/animated-group'
 import { TextEffect } from '../motion-primitives/text-effect'
 import { HeroHeader } from './hero-header'
+import { siteConfig } from '@/lib/site'
 
 const transitionVariants = {
     item: {
